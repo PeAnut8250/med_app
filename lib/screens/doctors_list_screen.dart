@@ -14,8 +14,8 @@ class DoctorsListScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // 1. Map Layer (Bottom) - Using a real interactive map
-          _buildMapBackground(),
+          // 1. Universal Stable Map Layer (Bottom) - CartoDB / OSM
+          _buildFlutterMap(),
 
           // 2. Draggable Sheet Layer
           _buildDraggableSheet(),
@@ -28,7 +28,7 @@ class DoctorsListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMapBackground() {
+  Widget _buildFlutterMap() {
     return Positioned.fill(
       child: FlutterMap(
         options: const MapOptions(
@@ -68,8 +68,8 @@ class DoctorsListScreen extends StatelessWidget {
         ),
         child: Center(
           child: Container(
-            width: 12,
-            height: 12,
+            width: 14,
+            height: 14,
             decoration: const BoxDecoration(
               color: primaryTeal,
               shape: BoxShape.circle,
@@ -89,7 +89,17 @@ class DoctorsListScreen extends StatelessWidget {
       left: 0,
       right: 0,
       child: Container(
-        padding: const EdgeInsets.fromLTRB(24, 60, 24, 20),
+        padding: const EdgeInsets.fromLTRB(16, 48, 16, 24),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.black.withOpacity(0.4),
+              Colors.transparent,
+            ],
+          ),
+        ),
         child: Column(
           children: [
             Row(
@@ -97,142 +107,127 @@ class DoctorsListScreen extends StatelessWidget {
               children: [
                 _buildCircularButton(
                   icon: Icons.chevron_left,
-                  onTap: () => Navigator.pop(context),
+                  iconColor: Colors.black,
+                  onPressed: () => Navigator.pop(context),
                 ),
                 _buildCircularButton(
-                  icon: Icons.notifications_none_outlined,
-                  onTap: () {},
-                  showBadge: true,
+                  icon: Icons.notifications_none,
+                  iconColor: Colors.black,
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Notifications pressed')),
+                    );
+                  },
                 ),
               ],
             ),
-            const SizedBox(height: 24),
-            _buildFloatingSearchBar(),
+            const SizedBox(height: 20),
+            // Floating Search Bar
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              height: 55,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.search, color: Colors.grey),
+                  SizedBox(width: 12),
+                  const Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search for doctors...',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  Icon(Icons.mic, color: primaryTeal),
+                  SizedBox(width: 8),
+                  Icon(Icons.tune, color: primaryTeal),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCircularButton({
-    required IconData icon,
-    required VoidCallback onTap,
-    bool showBadge = false,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(30),
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Stack(
-              children: [
-                Icon(icon, color: Colors.black87, size: 28),
-                if (showBadge)
-                  Positioned(
-                    right: 2,
-                    top: 2,
-                    child: Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        color: Colors.amber,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
+  Widget _buildCircularButton({required IconData icon, required VoidCallback onPressed, Color iconColor = Colors.black}) {
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        width: 45,
+        height: 45,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+          ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildFloatingSearchBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: const TextField(
-        decoration: InputDecoration(
-          hintText: 'Search Doctors by name or department',
-          hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
-          prefixIcon: Icon(Icons.search, color: Colors.grey),
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(vertical: 15),
-        ),
+        child: Icon(icon, color: iconColor, size: 28),
       ),
     );
   }
 
   Widget _buildDraggableSheet() {
     return DraggableScrollableSheet(
-      initialChildSize: 0.4,
-      minChildSize: 0.35,
-      maxChildSize: 0.9,
+      initialChildSize: 0.45,
+      minChildSize: 0.15,
+      maxChildSize: 0.85,
       builder: (context, scrollController) {
         return Container(
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
             boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                offset: Offset(0, -5),
-              ),
+              BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 5),
             ],
           ),
           child: Column(
             children: [
-              // Handlebar
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 12),
-                  width: 50,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2.5),
-                  ),
+              // Pull Handle
+              const SizedBox(height: 12),
+              Container(
+                width: 40,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Suggested Doctors',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'See All',
+                      style: TextStyle(color: primaryTeal, fontWeight: FontWeight.w600),
+                    ),
+                  ],
                 ),
               ),
               Expanded(
                 child: ListView.builder(
                   controller: scrollController,
-                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
-                  itemCount: 5,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  itemCount: 4,
                   itemBuilder: (context, index) {
-                    return const DoctorListCard(
-                      name: 'Dr. Rajesh Verma',
-                      specialty: 'Orthopedist',
-                      experience: '6 year experience',
-                      image: 'assets/doctor_rajesh.png',
-                      rating: 5.0,
-                    );
+                    return _buildDoctorListCard(context, index);
                   },
                 ),
               ),
@@ -243,240 +238,129 @@ class DoctorsListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomNav() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavItem(Icons.home_outlined, '', false),
-          _buildNavItem(Icons.medical_services, 'Doctors', true),
-          _buildNavItem(Icons.mail_outline, '', false),
-          _buildNavItem(Icons.person_outline, '', false),
-        ],
-      ),
-    );
-  }
+  Widget _buildDoctorListCard(BuildContext context, int index) {
+    final List<String> names = [
+      'Dr. Rajesh Kumar',
+      'Dr. Ananya Sharma',
+      'Dr. Michael Scott',
+      'Dr. Sarah Jane',
+    ];
+    final List<String> specialties = [
+      'Cardiologist',
+      'Dentist',
+      'Surgery',
+      'Neurologist',
+    ];
 
-  Widget _buildNavItem(IconData icon, String label, bool isActive) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: isActive ? primaryTeal : Colors.transparent,
-        borderRadius: BorderRadius.circular(25),
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: Colors.grey.shade100),
       ),
-      child: Row(
-        children: [
-          Icon(icon, color: isActive ? Colors.white : Colors.grey[600]),
-          if (isActive && label.isNotEmpty) ...[
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            // Left: Portrait Image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.asset(
+                'assets/doctor_rajesh.png',
+                width: 90,
+                height: 90,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Right: Content Column
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        names[index],
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      const Icon(Icons.favorite_border, color: primaryTeal, size: 20),
+                    ],
+                  ),
+                  Text(
+                    specialties[index],
+                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  ),
+                  const SizedBox(height: 8),
+                  // Info Row
+                  Row(
+                    children: [
+                      const Icon(Icons.badge_outlined, color: Colors.grey, size: 14),
+                      const SizedBox(width: 4),
+                      Text('5 Years Exp', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                      const SizedBox(width: 12),
+                      const Icon(Icons.schedule, color: Colors.grey, size: 14),
+                      const SizedBox(width: 4),
+                      Text('10 AM - 2 PM', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  // Action Buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () {},
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: primaryTeal),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                          ),
+                          child: const Text('Call', style: TextStyle(color: primaryTeal)),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        flex: 1,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryTeal,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            elevation: 0,
+                          ),
+                          child: const Text('Book Now'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
-        ],
-      ),
-    );
-  }
-}
-
-class DoctorListCard extends StatelessWidget {
-  final String name;
-  final String specialty;
-  final String experience;
-  final String image;
-  final double rating;
-
-  const DoctorListCard({
-    super.key,
-    required this.name,
-    required this.specialty,
-    required this.experience,
-    required this.image,
-    required this.rating,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.withOpacity(0.15)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Doctor Image (Left)
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: Image.asset(
-              image,
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Info & Actions Section (Right)
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const Icon(
-                      Icons.favorite_border,
-                      color: DoctorsListScreen.primaryTeal,
-                      size: 20,
-                    ),
-                  ],
-                ),
-                Text(
-                  specialty,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // Stats Row
-                Row(
-                  children: [
-                    _StatsIcon(icon: Icons.badge_outlined, text: experience),
-                    const SizedBox(width: 10),
-                    const _StatsIcon(icon: Icons.schedule, text: '10 AM - 2 PM'),
-                    const Spacer(),
-                    const Icon(Icons.star, color: Colors.amber, size: 14),
-                    const SizedBox(width: 4),
-                    Text(
-                      rating.toString(),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                // Action Buttons (Now in the right column)
-                Row(
-                  children: [
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Calling $name...')),
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(30),
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(
-                            color: DoctorsListScreen.primaryTeal,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.call, color: Colors.white, size: 16),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Booking with $name')),
-                            );
-                          },
-                          borderRadius: BorderRadius.circular(12),
-                          child: Container(
-                            height: 36,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: DoctorsListScreen.primaryTeal, width: 1.2),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(Icons.calendar_today_outlined, color: DoctorsListScreen.primaryTeal, size: 14),
-                                SizedBox(width: 6),
-                                Text(
-                                  'Book Now',
-                                  style: TextStyle(
-                                    color: DoctorsListScreen.primaryTeal,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _StatsIcon extends StatelessWidget {
-  final IconData icon;
-  final String text;
-
-  const _StatsIcon({required this.icon, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon, size: 14, color: Colors.grey[600]),
-        const SizedBox(width: 4),
-        Text(
-          text,
-          style: TextStyle(fontSize: 11, color: Colors.grey[600]),
         ),
+      ),
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return BottomNavigationBar(
+      currentIndex: 1, // "Doctors" active
+      selectedItemColor: primaryTeal,
+      unselectedItemColor: Colors.grey,
+      showSelectedLabels: true,
+      showUnselectedLabels: true,
+      type: BottomNavigationBarType.fixed,
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Doctors'),
+        BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), label: 'Chat'),
+        BottomNavigationBarItem(icon: Icon(Icons.medical_services_outlined), label: 'Lab'),
+        BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
       ],
     );
   }

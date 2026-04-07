@@ -37,6 +37,12 @@ dependencies:
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
 
+dependency_overrides:
+  flutter_map:
+    path: lib/packages/flutter_map
+  latlong2:
+    path: lib/packages/latlong2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

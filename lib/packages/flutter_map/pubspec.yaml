@@ -1,0 +1,14 @@
+name: flutter_map
+description: A lightweight local implementation of flutter_map.
+version: 7.0.2
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  latlong2:
+    path: ../latlong2
+  http: ^1.1.0
+  async: ^2.10.0
