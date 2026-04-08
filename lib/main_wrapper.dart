@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
+import 'screens/consultation_screen.dart';
 import 'screens/doctors_list_screen.dart';
 
 class MainWrapper extends StatefulWidget {
@@ -12,6 +13,8 @@ class MainWrapper extends StatefulWidget {
 class _MainWrapperState extends State<MainWrapper> {
   int _currentIndex = 0;
   late PageController _pageController;
+  late List<Widget> _screens;
+
 
   static const Color primaryTeal = Color(0xFF26A9B1);
 
@@ -19,6 +22,21 @@ class _MainWrapperState extends State<MainWrapper> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
+    _screens = _buildScreens();
+  }
+
+  List<Widget> _buildScreens() {
+    return [
+      const HomeScreen(),
+      ConsultationScreen(
+        onBackTap: () => _animateToTab(0),
+      ),
+      DoctorsListScreen(
+        onBackTap: () => _animateToTab(0),
+      ),
+      const Center(child: Text('Messages Screen Placeholder')),
+      const Center(child: Text('Profile Screen Placeholder')),
+    ];
   }
 
   @override
@@ -26,25 +44,6 @@ class _MainWrapperState extends State<MainWrapper> {
     _pageController.dispose();
     super.dispose();
   }
-
-  // Define screens in a getter to allow passing callbacks
-  // Optimization: Wrapped each screen in RepaintBoundary to isolate GPU layers
-  List<Widget> get _screens => [
-    const RepaintBoundary(child: HomeScreen()),
-    RepaintBoundary(
-      child: DoctorsListScreen(
-        onBackTap: () {
-          _animateToTab(0);
-        },
-      ),
-    ),
-    const RepaintBoundary(
-      child: Center(child: Text('Messages Screen Placeholder')),
-    ),
-    const RepaintBoundary(
-      child: Center(child: Text('Profile Screen Placeholder')),
-    ),
-  ];
 
   void _animateToTab(int index) {
     if (_currentIndex == index) return;
@@ -54,8 +53,8 @@ class _MainWrapperState extends State<MainWrapper> {
     });
     _pageController.animateToPage(
       index,
-      duration: const Duration(milliseconds: 250), // Optimization: Snappier duration
-      curve: Curves.fastOutSlowIn, // Optimization: Natural responsive curve
+      duration: const Duration(milliseconds: 200), // Optimization: Ultra-snappy duration
+      curve: Curves.fastOutSlowIn, 
     );
   }
 
@@ -83,7 +82,7 @@ class _MainWrapperState extends State<MainWrapper> {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 20,
+            blurRadius: 5, // Optimization: Reduced blur for GPU performance
             offset: const Offset(0, 5),
           ),
         ],
@@ -92,9 +91,10 @@ class _MainWrapperState extends State<MainWrapper> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildNavItem(Icons.home_outlined, 'Home', 0),
-          _buildNavItem(Icons.people_outline, 'Doctors', 1),
-          _buildNavItem(Icons.chat_bubble_outline, 'Chat', 2),
-          _buildNavItem(Icons.person_outline, 'Profile', 3),
+          _buildNavItem(Icons.assignment_outlined, 'My Consultation', 1),
+          _buildNavItem(Icons.medical_services_outlined, 'Doctors', 2),
+          _buildNavItem(Icons.mail_outline, 'Messages', 3),
+          _buildNavItem(Icons.person_outline, 'Profile', 4),
         ],
       ),
     );
@@ -102,11 +102,12 @@ class _MainWrapperState extends State<MainWrapper> {
 
   Widget _buildNavItem(IconData icon, String label, int index) {
     final bool isActive = _currentIndex == index;
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+    return InkResponse(
       onTap: () => _animateToTab(index),
+      radius: 40,
+      highlightColor: Colors.transparent,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250), // Match snappy duration
+        duration: const Duration(milliseconds: 200), 
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isActive ? primaryTeal : Colors.transparent,

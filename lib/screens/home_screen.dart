@@ -7,7 +7,10 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   final TextEditingController _searchController = TextEditingController();
 
   static const Color primaryTeal = Color(0xFF26A9B1);
@@ -59,21 +62,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Material(
       color: backgroundGray,
-      child: RepaintBoundary(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(context),
-              _buildCategories(),
-              _buildBanners(),
-              _buildSuggestedDoctors(),
-              _buildFeaturedServices(),
-              const SizedBox(height: 120), // Extra space for a floating FAB or bottom nav
-            ],
-          ),
+      child: SingleChildScrollView(
+        // Optimization: Removed redundant outer RepaintBoundary that was causing compositor lag
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(context),
+            _buildCategories(),
+            _buildBanners(),
+            _buildSuggestedDoctors(),
+            _buildFeaturedServices(),
+            const SizedBox(height: 120), 
+          ],
         ),
       ),
     );
@@ -95,12 +98,12 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      const Text(
+                      Text(
                         'CARELINE',
                         style: TextStyle(
                           color: Color(0xFFE53935),
@@ -109,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           letterSpacing: 0.5,
                         ),
                       ),
-                      const Text(
+                      Text(
                         'MED',
                         style: TextStyle(
                           color: Colors.black,
@@ -120,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  const Text(
+                  Text(
                     'Happiness is good care',
                     style: TextStyle(
                       color: Colors.black54,
@@ -133,11 +136,18 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.notifications_none, color: Colors.orange, size: 24),
-                    SizedBox(width: 8),
-                    CircleAvatar(radius: 18, backgroundImage: AssetImage('assets/Profile.png')),
+                    const Icon(Icons.notifications_none, color: Colors.orange, size: 24),
+                    const SizedBox(width: 8),
+                    // Optimization: Caching profile image decode size
+                    CircleAvatar(
+                      radius: 18, 
+                      backgroundImage: ResizeImage(
+                        const AssetImage('assets/Profile.png'),
+                        width: 100, // Pre-scale for circle avatar
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -182,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         SizedBox(
-          height: 150, 
+          height: 140, 
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             scrollDirection: Axis.horizontal,
@@ -198,13 +208,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: Column(
                   children: [
-                    SizedBox(
+                    // Optimization: Caching category icons to small size
+                    Image.asset(
+                      _categories[index]['icon']!,
                       height: 100,
                       width: 100,
-                      child: Image.asset(
-                        _categories[index]['icon']!,
-                        fit: BoxFit.contain,
-                      ),
+                      cacheWidth: 200, 
+                      fit: BoxFit.contain,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -254,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
+              blurRadius: 5, // Optimization: Lighter GPU load
               offset: const Offset(0, 5),
             ),
           ],
@@ -294,6 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Image.asset(
                   image,
                   height: 125,
+                  cacheHeight: 300, // Optimization: Avoid full size decode
                   fit: BoxFit.contain,
                 ),
               ),
@@ -370,52 +381,58 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: BoxDecoration(
                       color: primaryTeal.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(20),
-                      image: DecorationImage(
-                        image: AssetImage(_services[index]['icon']!),
-                        fit: BoxFit.cover,
-                        onError: (e, s) {},
-                      ),
                     ),
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            Colors.black.withValues(alpha: 0.6),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
                       child: Stack(
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                _services[index]['name']!,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
+                          // Optimization: Use cacheWidth for service background image
+                          Positioned.fill(
+                            child: Image.asset(
+                              _services[index]['icon']!,
+                              cacheWidth: 600,
+                              fit: BoxFit.cover,
+                              errorBuilder: (c, e, s) => Container(color: primaryTeal),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  Colors.black.withValues(alpha: 0.6),
+                                  Colors.transparent,
+                                ],
                               ),
-                              Text(
-                                _services[index]['desc']!,
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  _services[index]['name']!,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  _services[index]['desc']!,
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           const Positioned(
-                            top: 0,
-                            right: 0,
+                            top: 16,
+                            right: 16,
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 12,
@@ -457,7 +474,7 @@ class DoctorCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
+            blurRadius: 5, // Optimization: Lighter GPU load
             offset: const Offset(0, 5),
           ),
         ],
@@ -555,6 +572,7 @@ class DoctorCard extends StatelessWidget {
             child: Image.asset(
               image,
               height: 160,
+              cacheHeight: 400, // Optimization: Forced small decode size
               fit: BoxFit.contain,
               alignment: Alignment.bottomRight,
             ),
