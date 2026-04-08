@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'chat_detail_screen.dart';
+import 'notifications_screen.dart';
+import '../widgets/notification_bell.dart';
 
 class MessagesScreen extends StatefulWidget {
   final VoidCallback? onBackTap;
@@ -29,7 +31,7 @@ class _MessagesScreenState extends State<MessagesScreen> with AutomaticKeepAlive
       'time': '10:42 AM',
       'isOnline': true,
       'unread': true,
-      'image': 'assets/doctor_aris.png',
+      'image': 'doctor_aris.png',
     },
     {
       'name': 'Dr. Sophia Bennett',
@@ -38,7 +40,7 @@ class _MessagesScreenState extends State<MessagesScreen> with AutomaticKeepAlive
       'time': '09:15 AM',
       'isOnline': true,
       'unread': true,
-      'image': 'assets/doctor_sophia.png',
+      'image': 'doctor_sophia.png',
     },
     {
       'name': 'Dr. Rajesh Verma',
@@ -62,17 +64,17 @@ class _MessagesScreenState extends State<MessagesScreen> with AutomaticKeepAlive
             _buildHeader(),
             Expanded(
               child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
+                physics: BouncingScrollPhysics(),
                 child: Column(
                   children: [
                     _buildPromoBanner(),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
                     _buildSearchBar(),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
                     _buildFilters(),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     _buildChatList(),
-                    const SizedBox(height: 120), // Bottom nav allowance
+                    SizedBox(height: 120), // Bottom nav allowance
                   ],
                 ),
               ),
@@ -104,22 +106,9 @@ class _MessagesScreenState extends State<MessagesScreen> with AutomaticKeepAlive
               color: Colors.black87,
             ),
           ),
-          Stack(
-            children: [
-              _buildCircularBtn(Icons.notifications_none_outlined, () {}),
-              Positioned(
-                right: 12,
-                top: 12,
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: Colors.orange,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ],
+          NotificationBell(
+            hasNotification: true,
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
           ),
         ],
       ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'doctor_profile_screen.dart';
+import 'notifications_screen.dart';
+import '../widgets/notification_bell.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong2.dart';
 
@@ -142,9 +144,9 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> with AutomaticKee
                   icon: Icons.chevron_left,
                   onPressed: widget.onBackTap ?? () => Navigator.pop(context),
                 ),
-                _buildCircularButton(
-                  icon: Icons.notifications_none,
-                  onPressed: () {},
+                NotificationBell(
+                  hasNotification: true,
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
                 ),
               ],
             ),

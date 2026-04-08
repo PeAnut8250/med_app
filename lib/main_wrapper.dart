@@ -3,6 +3,7 @@ import 'screens/home_screen.dart';
 import 'screens/consultation_screen.dart';
 import 'screens/doctors_list_screen.dart';
 import 'screens/messages_screen.dart';
+import 'screens/profile_screen.dart';
 
 class MainWrapper extends StatefulWidget {
   const MainWrapper({super.key});
@@ -13,7 +14,6 @@ class MainWrapper extends StatefulWidget {
 
 class _MainWrapperState extends State<MainWrapper> {
   int _currentIndex = 0;
-  late PageController _pageController;
   late List<Widget> _screens;
 
 
@@ -22,13 +22,17 @@ class _MainWrapperState extends State<MainWrapper> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: _currentIndex);
     _screens = _buildScreens();
   }
 
   List<Widget> _buildScreens() {
     return [
-      const HomeScreen(),
+      HomeScreen(
+        onProfileTap: () {
+          if (_currentIndex == 4) return;
+          _animateToTab(4);
+        },
+      ),
       ConsultationScreen(
         onBackTap: () => _animateToTab(0),
       ),
@@ -38,13 +42,14 @@ class _MainWrapperState extends State<MainWrapper> {
       MessagesScreen(
         onBackTap: () => _animateToTab(0),
       ),
-      const Center(child: Text('Profile Screen Placeholder')),
+      ProfileScreen(
+        onBackTap: () => _animateToTab(0),
+      ),
     ];
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
     super.dispose();
   }
 
@@ -54,21 +59,28 @@ class _MainWrapperState extends State<MainWrapper> {
     setState(() {
       _currentIndex = index;
     });
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 200), // Optimization: Ultra-snappy duration
-      curve: Curves.fastOutSlowIn, 
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Disabled swipe physics to prevent gesture conflicts with the Live Map
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: _screens,
+      // Use AnimatedSwitcher for smooth cross-fade transitions
+      body: Stack(
+        fit: StackFit.expand,
+        children: List.generate(_screens.length, (index) {
+          final bool isActive = _currentIndex == index;
+          return AnimatedOpacity(
+            opacity: isActive ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOutCubic,
+            child: IgnorePointer(
+              ignoring: !isActive,
+              child: RepaintBoundary(
+                child: _screens[index],
+              ),
+            ),
+          );
+        }),
       ),
       bottomNavigationBar: _buildBottomNav(),
       extendBody: true, 

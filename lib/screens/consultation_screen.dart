@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'chat_detail_screen.dart';
+import 'notifications_screen.dart';
+import '../widgets/notification_bell.dart';
 
 class ConsultationScreen extends StatefulWidget {
   final VoidCallback? onBackTap;
@@ -14,13 +17,14 @@ class _ConsultationScreenState extends State<ConsultationScreen> with AutomaticK
 
   int _selectedTabIndex = 0;
   static const Color primaryTeal = Color(0xFF26A9B1);
+  static const Color backgroundGray = Color(0xFFF8F9FA);
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Material(
-      color: const Color(0xFFF8F9FA),
-      child: SafeArea(
+    return Scaffold(
+      backgroundColor: backgroundGray,
+      body: SafeArea(
         child: Column(
           children: [
             _buildHeader(context),
@@ -58,32 +62,15 @@ class _ConsultationScreenState extends State<ConsultationScreen> with AutomaticK
           ),
           const Text(
             'My Consultation',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
           ),
-          Stack(
-            children: [
-              _buildCircularButton(
-                icon: Icons.notifications_none,
-                onPressed: () {},
-              ),
-              Positioned(
-                right: 12,
-                top: 10,
-                child: Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: Colors.orange,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                ),
-              ),
-            ],
+          NotificationBell(
+            hasNotification: true,
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
           ),
         ],
       ),

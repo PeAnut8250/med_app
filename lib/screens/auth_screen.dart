@@ -17,6 +17,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   static const Color primaryTeal = Color(0xFF26A9B1);
 
@@ -25,6 +26,7 @@ class _AuthScreenState extends State<AuthScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -251,6 +253,9 @@ class _AuthScreenState extends State<AuthScreen> {
               String displayName = namePart[0].toUpperCase() + namePart.substring(1).toLowerCase();
               
               await prefs.setString('user_name', displayName);
+              await prefs.setString('user_email', _emailController.text.trim());
+              // Use a default phone for login if not available, usually login wouldn't have it
+              await prefs.setString('user_phone', '+1 (555) 000-0000');
               await prefs.setInt('login_time', DateTime.now().millisecondsSinceEpoch);
             } catch (e) {
               debugPrint('Error saving preferences: $e');
@@ -310,6 +315,17 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
         const SizedBox(height: 20),
         const Text(
+          'Phone Number',
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+        ),
+        const SizedBox(height: 8),
+        _buildTextField(
+          controller: _phoneController,
+          hint: '+1 (555) 000-0000',
+          prefixIcon: Icons.phone_android_outlined,
+        ),
+        const SizedBox(height: 20),
+        const Text(
           'Email Address',
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
         ),
@@ -361,6 +377,8 @@ class _AuthScreenState extends State<AuthScreen> {
             try {
               final SharedPreferences prefs = await SharedPreferences.getInstance();
               await prefs.setString('user_name', _nameController.text.trim());
+              await prefs.setString('user_email', _emailController.text.trim());
+              await prefs.setString('user_phone', _phoneController.text.trim());
               await prefs.setInt('login_time', DateTime.now().millisecondsSinceEpoch);
             } catch (e) {
               debugPrint('Error saving preferences: $e');

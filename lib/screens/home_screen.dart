@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'doctor_profile_screen.dart';
-
+import 'notifications_screen.dart';
+import '../widgets/notification_bell.dart';
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final VoidCallback? onProfileTap;
+  const HomeScreen({super.key, this.onProfileTap});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -145,22 +147,45 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   ),
                 ],
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
-                child: Row(
-                  children: [
-                    const Icon(Icons.notifications_none, color: Colors.orange, size: 24),
-                    const SizedBox(width: 8),
-                    // Optimization: Caching profile image decode size
-                    CircleAvatar(
-                      radius: 18, 
-                      backgroundImage: ResizeImage(
-                        const AssetImage('assets/Profile.png'),
-                        width: 100, // Pre-scale for circle avatar
-                      ),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: widget.onProfileTap,
+                  borderRadius: BorderRadius.circular(30),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white, 
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                  ],
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        NotificationBell(
+                          backgroundColor: Colors.transparent,
+                          iconColor: Colors.orange,
+                          hasNotification: true,
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
+                        ),
+                        const SizedBox(width: 8),
+                        // Optimization: Caching profile image decode size
+                        CircleAvatar(
+                          radius: 18, 
+                          backgroundImage: ResizeImage(
+                            const AssetImage('assets/Profile.png'),
+                            width: 100, // Pre-scale for circle avatar
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],

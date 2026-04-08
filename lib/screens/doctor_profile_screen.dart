@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'booking_flow_screen.dart';
+import 'notifications_screen.dart';
+import '../widgets/notification_bell.dart';
 
 class DoctorProfileView extends StatefulWidget {
   final Map<String, String> doctor;
@@ -78,9 +80,9 @@ class _DoctorProfileViewState extends State<DoctorProfileView> {
         Padding(
           padding: const EdgeInsets.only(right: 16),
           child: Center(
-            child: _buildCircularIcon(
-              icon: Icons.bookmark_border,
-              onPressed: () {},
+            child: NotificationBell(
+              hasNotification: true,
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
             ),
           ),
         ),
