@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:animations/animations.dart';
 import 'screens/home_screen.dart';
 import 'screens/consultation_screen.dart';
 import 'screens/doctors_list_screen.dart';
@@ -64,23 +65,24 @@ class _MainWrapperState extends State<MainWrapper> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Use AnimatedSwitcher for smooth cross-fade transitions
-      body: Stack(
-        fit: StackFit.expand,
-        children: List.generate(_screens.length, (index) {
-          final bool isActive = _currentIndex == index;
-          return AnimatedOpacity(
-            opacity: isActive ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOutCubic,
-            child: IgnorePointer(
-              ignoring: !isActive,
-              child: RepaintBoundary(
-                child: _screens[index],
-              ),
-            ),
+      // Use PageTransitionSwitcher for Material Motion transitions
+      body: PageTransitionSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (
+          Widget child,
+          Animation<double> primaryAnimation,
+          Animation<double> secondaryAnimation,
+        ) {
+          return FadeThroughTransition(
+            animation: primaryAnimation,
+            secondaryAnimation: secondaryAnimation,
+            child: child,
           );
-        }),
+        },
+        child: Container(
+          key: ValueKey<int>(_currentIndex),
+          child: _screens[_currentIndex],
+        ),
       ),
       bottomNavigationBar: _buildBottomNav(),
       extendBody: true, 
@@ -96,7 +98,7 @@ class _MainWrapperState extends State<MainWrapper> {
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 5, // Optimization: Reduced blur for GPU performance
             offset: const Offset(0, 5),
           ),
@@ -133,7 +135,7 @@ class _MainWrapperState extends State<MainWrapper> {
           children: [
             Icon(
               icon,
-              color: isActive ? Colors.white : primaryTeal.withValues(alpha: 0.6),
+              color: isActive ? Colors.white : primaryTeal.withOpacity(0.6),
               size: 24,
             ),
             if (isActive) ...[
@@ -153,3 +155,4 @@ class _MainWrapperState extends State<MainWrapper> {
     );
   }
 }
+

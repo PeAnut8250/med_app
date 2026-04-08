@@ -38,7 +38,7 @@ class OnboardingScreen extends StatelessWidget {
                   Text(
                     'Book appointments. Consult doctors.\nAnytime, anywhere.',
                     style: TextStyle(
-                      color: const Color(0xFF26A9B1).withValues(alpha: 0.8),
+                      color: const Color(0xFF26A9B1).withOpacity(0.8),
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       height: 1.5,
@@ -81,9 +81,9 @@ class _SliderButtonState extends State<SliderButton> {
       return Container(
         height: 70,
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.4),
+          color: Colors.white.withOpacity(0.4),
           borderRadius: BorderRadius.circular(35),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
+          border: Border.all(color: Colors.white.withOpacity(0.5)),
         ),
         child: Stack(
           children: [

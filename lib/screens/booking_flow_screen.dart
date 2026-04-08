@@ -379,7 +379,7 @@ class _BookingFlowScreenState extends State<BookingFlowScreen> {
       child: Container(
         height: 100,
         decoration: BoxDecoration(
-          color: isSelected ? primaryTeal.withValues(alpha: 0.05) : Colors.white,
+          color: isSelected ? primaryTeal.withOpacity(0.05) : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: isSelected ? primaryTeal : Colors.grey[200]!, width: isSelected ? 2 : 1),
         ),
@@ -397,7 +397,7 @@ class _BookingFlowScreenState extends State<BookingFlowScreen> {
 
   Widget _buildDashedUploadBox() {
     return CustomPaint(
-      painter: DashRectPainter(color: primaryTeal.withValues(alpha: 0.4)),
+      painter: DashRectPainter(color: primaryTeal.withOpacity(0.4)),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 30),
@@ -418,7 +418,7 @@ class _BookingFlowScreenState extends State<BookingFlowScreen> {
   Widget _buildInfoCard() {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: primaryTeal.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(25)),
+      decoration: BoxDecoration(color: primaryTeal.withOpacity(0.1), borderRadius: BorderRadius.circular(25)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -432,7 +432,7 @@ class _BookingFlowScreenState extends State<BookingFlowScreen> {
           const SizedBox(height: 12),
           Text(
             'Sharing detailed symptoms and records helps your physician prepare for the call, ensuring a more accurate diagnosis and effective treatment plan.',
-            style: TextStyle(color: primaryTeal.withValues(alpha: 0.8), fontSize: 13, height: 1.5, fontWeight: FontWeight.w500),
+            style: TextStyle(color: primaryTeal.withOpacity(0.8), fontSize: 13, height: 1.5, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -466,7 +466,7 @@ class _BookingFlowScreenState extends State<BookingFlowScreen> {
       behavior: HitTestBehavior.opaque,
       child: Container(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(color: isSelected ? primaryTeal.withValues(alpha: 0.05) : Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: isSelected ? primaryTeal : Colors.grey[100]!, width: isSelected ? 2 : 1)),
+        decoration: BoxDecoration(color: isSelected ? primaryTeal.withOpacity(0.05) : Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: isSelected ? primaryTeal : Colors.grey[100]!, width: isSelected ? 2 : 1)),
         child: Row(
           children: [
             Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: isSelected ? primaryTeal : Colors.grey[100]!, borderRadius: BorderRadius.circular(10)), child: Icon(icon, color: isSelected ? Colors.white : Colors.grey[600])),
@@ -543,7 +543,7 @@ class _BookingFlowScreenState extends State<BookingFlowScreen> {
       onTap: () => setState(() => _isSummaryExpanded = !_isSummaryExpanded),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-        decoration: BoxDecoration(color: primaryTeal.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(15)),
+        decoration: BoxDecoration(color: primaryTeal.withOpacity(0.1), borderRadius: BorderRadius.circular(15)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -649,7 +649,7 @@ class _BookingFlowScreenState extends State<BookingFlowScreen> {
       borderRadius: BorderRadius.circular(50),
       child: Container(
         width: 44, height: 44,
-        decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4, offset: const Offset(0, 2))]),
+        decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2))]),
         child: Icon(icon, color: Colors.black87, size: 26),
       ),
     );

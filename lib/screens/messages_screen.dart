@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'chat_detail_screen.dart';
 import 'notifications_screen.dart';
+import 'quick_consult_screen.dart';
 import '../widgets/notification_bell.dart';
 
 class MessagesScreen extends StatefulWidget {
@@ -128,7 +129,7 @@ class _MessagesScreenState extends State<MessagesScreen> with AutomaticKeepAlive
         ),
         boxShadow: [
           BoxShadow(
-            color: primaryTeal.withValues(alpha: 0.3),
+            color: primaryTeal.withOpacity(0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -143,7 +144,7 @@ class _MessagesScreenState extends State<MessagesScreen> with AutomaticKeepAlive
             child: Icon(
               Icons.videocam,
               size: 180,
-              color: Colors.white.withValues(alpha: 0.1),
+              color: Colors.white.withOpacity(0.1),
             ),
           ),
           Padding(
@@ -165,13 +166,18 @@ class _MessagesScreenState extends State<MessagesScreen> with AutomaticKeepAlive
                 Text(
                   'Instant video call with top\ncertified specialists.',
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.8),
+                    color: Colors.white.withOpacity(0.8),
                     fontSize: 12, // Slightly reduced
                   ),
                 ),
                 const SizedBox(height: 16), // Replaced Spacer with fixed gap
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const QuickConsultScreen()),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: primaryTeal,
@@ -203,7 +209,7 @@ class _MessagesScreenState extends State<MessagesScreen> with AutomaticKeepAlive
           borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: Colors.black.withOpacity(0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -287,7 +293,7 @@ class _MessagesScreenState extends State<MessagesScreen> with AutomaticKeepAlive
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: Colors.black.withOpacity(0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -321,7 +327,7 @@ class ChatTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
+              color: Colors.black.withOpacity(0.02),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),

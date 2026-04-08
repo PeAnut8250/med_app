@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'auth_screen.dart';
+import 'bookmarked_doctors_screen.dart';
+import 'payment_methods_screen.dart';
 import 'profile_sub_screens.dart';
 import 'notifications_screen.dart';
 import '../widgets/notification_bell.dart';
@@ -103,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
           Container(
             width: 60,
             height: 60,
-            decoration: BoxDecoration(color: primaryTeal.withValues(alpha: 0.1), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: primaryTeal.withOpacity(0.1), shape: BoxShape.circle),
             child: Icon(icon, color: primaryTeal, size: 28),
           ),
           const SizedBox(height: 8),
@@ -172,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
       child: Container(
         width: 48,
         height: 48,
-        decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))]),
+        decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))]),
         child: Center(
           child: Stack(
             children: [
@@ -207,14 +210,27 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
               ),
             ),
             Positioned(
-              right: 0,
-              bottom: 0,
+              right: 5,
+              bottom: 5,
               child: GestureDetector(
                 onTap: _showImagePickerOptions,
                 child: Container(
+                  height: 35,
+                  width: 35,
                   padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(color: primaryTeal, shape: BoxShape.circle),
-                  child: const Icon(Icons.edit, color: Colors.white, size: 16),
+                  decoration: BoxDecoration(
+                    color: primaryTeal,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(25),
+                      bottomLeft: Radius.circular(15),
+                      topRight: Radius.circular(15),
+                    ),
+                    border: Border.all(color: Colors.white, width: 2),
+                  ),
+                  child: const Center(
+                    child: Icon(Icons.edit, color: Colors.white, size: 16),
+                  ),
                 ),
               ),
             ),
@@ -238,6 +254,7 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
             if (updated == true) _loadUserData();
           }),
           _buildMenuItem(Icons.account_tree_outlined, 'Family Members', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AddFamilyMemberScreen()))),
+          _buildMenuItem(Icons.bookmark_outline, 'My Bookmarked Doctors', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BookmarkedDoctorsScreen()))),
           _buildMenuItem(Icons.payment_outlined, 'Payment Methods', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PaymentMethodsScreen()))),
           _buildMenuItem(Icons.history, 'Appointment History', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AppointmentHistoryScreen()))),
           _buildMenuItem(Icons.settings_outlined, 'Settings', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen()))),
@@ -257,14 +274,14 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
         borderRadius: BorderRadius.circular(16),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))]),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))]),
           child: Row(
             children: [
               Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: (isDestructive ? Colors.red : const Color(0xFFF5F5F5)), borderRadius: BorderRadius.circular(10)), child: Icon(icon, color: (isDestructive ? Colors.white : Colors.black54), size: 20)),
               const SizedBox(width: 16),
               Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: isDestructive ? Colors.red : Colors.black87)),
               const Spacer(),
-              Icon(Icons.chevron_right, color: isDestructive ? Colors.red.withValues(alpha: 0.5) : Colors.grey[400], size: 20),
+              Icon(Icons.chevron_right, color: isDestructive ? Colors.red.withOpacity(0.5) : Colors.grey[400], size: 20),
             ],
           ),
         ),

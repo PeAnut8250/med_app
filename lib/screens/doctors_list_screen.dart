@@ -52,7 +52,7 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> with AutomaticKee
   Widget _buildMapPlaceholder() {
     return Positioned.fill(
       child: Container(
-        color: const Color(0xFFE0E0E0).withValues(alpha: 0.3),
+        color: const Color(0xFFE0E0E0).withOpacity(0.3),
         child: const Center(
           child: CircularProgressIndicator(color: primaryTeal, strokeWidth: 2),
         ),
@@ -98,7 +98,7 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> with AutomaticKee
       height: 40,
       child: Container(
         decoration: BoxDecoration(
-          color: primaryTeal.withValues(alpha: 0.2),
+          color: primaryTeal.withOpacity(0.2),
           shape: BoxShape.circle,
         ),
         child: Center(
@@ -130,7 +130,7 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> with AutomaticKee
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.black.withValues(alpha: 0.5),
+              Colors.black.withOpacity(0.5),
               Colors.transparent,
             ],
           ),
@@ -159,7 +159,7 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> with AutomaticKee
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
+                    color: Colors.black.withOpacity(0.1),
                     blurRadius: 5, // Optimization: Lighter GPU load
                     offset: const Offset(0, 5),
                   ),
@@ -206,7 +206,7 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> with AutomaticKee
         boxShadow: [
           if (!isActive)
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: Colors.black.withOpacity(0.1),
               blurRadius: 4, // Optimization: Ultra-light for chips
               offset: const Offset(0, 2),
             ),
@@ -339,7 +339,7 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> with AutomaticKee
                         doctor['name']!,
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
-                      Icon(Icons.favorite_border, color: Colors.redAccent.withValues(alpha: 0.8), size: 18),
+                      Icon(Icons.favorite_border, color: Colors.redAccent.withOpacity(0.8), size: 18),
                     ],
                   ),
                   Text(doctor['specialty']!, style: const TextStyle(color: Colors.grey, fontSize: 13)),
@@ -393,7 +393,7 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> with AutomaticKee
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: primaryTeal.withValues(alpha: 0.1),
+        color: primaryTeal.withOpacity(0.1),
         shape: BoxShape.circle,
       ),
       child: const Icon(Icons.call, color: primaryTeal, size: 20),

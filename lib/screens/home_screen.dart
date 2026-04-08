@@ -3,6 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'doctor_profile_screen.dart';
 import 'notifications_screen.dart';
 import '../widgets/notification_bell.dart';
+import '../models/service_model.dart';
+import 'service_detail_screen.dart';
 class HomeScreen extends StatefulWidget {
   final VoidCallback? onProfileTap;
   const HomeScreen({super.key, this.onProfileTap});
@@ -25,20 +27,32 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     {'name': 'Gynecology', 'icon': 'assets/Frame 2.png'},
     {'name': 'Orthopedist', 'icon': 'assets/Frame 3.png'},
     {'name': 'General Surgery', 'icon': 'assets/Frame 7.png'},
-    {'name': 'Cardiology', 'icon': 'assets/Frame 8.png'},
+    // {'name': 'Cardiology', 'icon': 'assets/Frame 8.png'}, // Disabled for now
   ];
 
   final List<Map<String, String>> _doctors = [
     {'name': 'Dr. Rajesh Verma', 'specialty': 'Orthopedist', 'experience': '6 year experience', 'image': 'assets/image 18.png'},
     {'name': 'Dr. Sarita Singh', 'specialty': 'Gynecology', 'experience': '8 year experience', 'image': 'assets/image 18.png'},
-    {'name': 'Dr. Amit Kumar', 'specialty': 'Cardiology', 'experience': '10 year experience', 'image': 'assets/image 18.png'},
+    // {'name': 'Dr. Amit Kumar', 'specialty': 'Cardiology', 'experience': '10 year experience', 'image': 'assets/image 18.png'},
   ];
 
   late List<Map<String, String>> _filteredDoctors;
 
-  final List<Map<String, String>> _services = [
-    {'name': 'DENTAL CLINIC', 'icon': 'assets/dental_service.png', 'desc': 'Best quality treatments'},
-    {'name': 'SURGERY', 'icon': 'assets/surgery_service.png', 'desc': 'Expert surgical care'},
+  final List<ServiceModel> _services = [
+    ServiceModel(
+      name: 'DENTAL CLINIC',
+      tagline: 'Premium Dental Care',
+      imagePath: 'assets/dental_service.png',
+      description: 'Our dental clinic offers a full range of services from routine checkups to complex surgeries. We utilize the latest technology to ensure your smile remains bright and healthy.',
+      subServices: ['Root Canal', 'Teeth Whitening', 'Dental Braces', 'Implants'],
+    ),
+    ServiceModel(
+      name: 'SURGERY',
+      tagline: 'Advanced Surgical Center',
+      imagePath: 'assets/surgery_service.png',
+      description: 'State-of-the-art surgical facilities with a focus on minimally invasive procedures. Our expert surgeons are dedicated to providing the highest standard of patient care.',
+      subServices: ['General Surgery', 'Urology', 'Orthopedics', 'Plastic Surgery'],
+    ),
   ];
 
   @override
@@ -159,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                       borderRadius: BorderRadius.circular(30),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
+                          color: Colors.black.withOpacity(0.1),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -313,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: Colors.black.withOpacity(0.05),
               blurRadius: 5, // Optimization: Lighter GPU load
               offset: const Offset(0, 5),
             ),
@@ -433,13 +447,21 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
               itemCount: _services.length,
               separatorBuilder: (context, index) => const SizedBox(width: 16),
               itemBuilder: (context, index) {
+                final service = _services[index];
                 return InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ServiceDetailScreen(service: service),
+                      ),
+                    );
+                  },
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
                     width: 280,
                     decoration: BoxDecoration(
-                      color: primaryTeal.withValues(alpha: 0.08),
+                      color: primaryTeal.withOpacity(0.08),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: ClipRRect(
@@ -448,11 +470,14 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                         children: [
                           // Optimization: Use cacheWidth for service background image
                           Positioned.fill(
-                            child: Image.asset(
-                              _services[index]['icon']!,
-                              cacheWidth: 600,
-                              fit: BoxFit.cover,
-                              errorBuilder: (c, e, s) => Container(color: primaryTeal),
+                            child: Hero(
+                              tag: 'service_image_${service.name}',
+                              child: Image.asset(
+                                service.imagePath,
+                                cacheWidth: 600,
+                                fit: BoxFit.cover,
+                                errorBuilder: (c, e, s) => Container(color: primaryTeal),
+                              ),
                             ),
                           ),
                           Container(
@@ -462,7 +487,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                 begin: Alignment.bottomCenter,
                                 end: Alignment.topCenter,
                                 colors: [
-                                  Colors.black.withValues(alpha: 0.6),
+                                  Colors.black.withOpacity(0.6),
                                   Colors.transparent,
                                 ],
                               ),
@@ -472,7 +497,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  _services[index]['name']!,
+                                  service.name,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -480,7 +505,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                   ),
                                 ),
                                 Text(
-                                  _services[index]['desc']!,
+                                  service.tagline,
                                   style: const TextStyle(
                                     color: Colors.white70,
                                     fontSize: 12,
@@ -533,7 +558,7 @@ class DoctorCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black.withOpacity(0.04),
             blurRadius: 5, // Optimization: Lighter GPU load
             offset: const Offset(0, 5),
           ),

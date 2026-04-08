@@ -120,7 +120,7 @@ class _AuthScreenState extends State<AuthScreen> {
         borderRadius: BorderRadius.circular(35),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -408,10 +408,10 @@ class _AuthScreenState extends State<AuthScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+        border: Border.all(color: Colors.grey.withOpacity(0.2)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
+            color: Colors.black.withOpacity(0.02),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -451,7 +451,7 @@ class _AuthScreenState extends State<AuthScreen> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isSelected ? primaryTeal.withValues(alpha: 0.08) : Colors.grey.withValues(alpha: 0.05),
+          color: isSelected ? primaryTeal.withOpacity(0.08) : Colors.grey.withOpacity(0.05),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? primaryTeal : Colors.transparent,
@@ -491,7 +491,7 @@ class _AuthScreenState extends State<AuthScreen> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: primaryTeal.withValues(alpha: 0.3),
+            color: primaryTeal.withOpacity(0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -528,7 +528,7 @@ class _AuthScreenState extends State<AuthScreen> {
       children: [
         Row(
           children: [
-            Expanded(child: Divider(color: Colors.grey.withValues(alpha: 0.3))),
+            Expanded(child: Divider(color: Colors.grey.withOpacity(0.3))),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
@@ -536,7 +536,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.0),
               ),
             ),
-            Expanded(child: Divider(color: Colors.grey.withValues(alpha: 0.3))),
+            Expanded(child: Divider(color: Colors.grey.withOpacity(0.3))),
           ],
         ),
         const SizedBox(height: 24),
@@ -560,7 +560,7 @@ class _AuthScreenState extends State<AuthScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+        border: Border.all(color: Colors.grey.withOpacity(0.1)),
       ),
       child: Icon(fallbackIcon, color: Colors.grey[700], size: 28),
     );

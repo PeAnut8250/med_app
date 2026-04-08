@@ -104,7 +104,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           Container(
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: primaryTeal.withValues(alpha: 0.05),
+              color: primaryTeal.withOpacity(0.05),
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -171,7 +171,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: Colors.black.withOpacity(0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -203,7 +203,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               decoration: BoxDecoration(
-                color: primaryTeal.withValues(alpha: 0.15),
+                color: primaryTeal.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: const Text(
@@ -256,21 +256,21 @@ class _NotificationCardState extends State<NotificationCard> {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: widget.isModern ? const Color(0xFFE0E0E0).withValues(alpha: 0.4) : Colors.white,
+        color: widget.isModern ? const Color(0xFFE0E0E0).withOpacity(0.4) : Colors.white,
         borderRadius: BorderRadius.circular(20),
         gradient: widget.isGradient 
           ? LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.orange.withValues(alpha: 0.15),
-                Colors.orange.withValues(alpha: 0.05),
+                Colors.orange.withOpacity(0.15),
+                Colors.orange.withOpacity(0.05),
               ],
             )
           : null,
         boxShadow: widget.isModern || widget.isGradient ? null : [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withOpacity(0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -284,7 +284,7 @@ class _NotificationCardState extends State<NotificationCard> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: widget.iconColor.withValues(alpha: 0.1),
+                  color: widget.iconColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Icon(widget.icon, color: widget.iconColor, size: 24),

@@ -204,11 +204,11 @@ class AppointmentHistoryScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF9F9F9),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+        border: Border.all(color: Colors.grey.withOpacity(0.1)),
       ),
       child: Row(
         children: [
-          CircleAvatar(backgroundColor: const Color(0xFF26A9B1).withValues(alpha: 0.1), child: const Icon(Icons.calendar_today, color: Color(0xFF26A9B1), size: 18)),
+          CircleAvatar(backgroundColor: const Color(0xFF26A9B1).withOpacity(0.1), child: const Icon(Icons.calendar_today, color: Color(0xFF26A9B1), size: 18)),
           const SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,21 +280,3 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
-// --- PAYMENT METHODS ---
-class PaymentMethodsScreen extends StatelessWidget {
-  const PaymentMethodsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('Payment Methods', style: TextStyle(color: Colors.black, fontSize: 18)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(icon: const Icon(Icons.chevron_left, color: Colors.black), onPressed: () => Navigator.pop(context)),
-      ),
-      body: const Center(child: Text('Payment Methods Content Coming Soon', style: TextStyle(color: Colors.grey))),
-    );
-  }
-}
