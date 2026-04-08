@@ -1,4 +1,5 @@
 name: flutter_map
+publish_to: 'none'
 description: A lightweight local implementation of flutter_map.
 version: 7.0.2
 

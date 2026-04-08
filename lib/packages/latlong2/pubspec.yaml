@@ -1,5 +1,6 @@
 name: latlong2
-description: A lightweight Dart library for common latitude and longitude calculations.
+publish_to: 'none'
+description: A lightweight local implementation of latlong2. latitude and longitude calculations.
 version: 0.9.1
 homepage: https://github.com/base2/latlong2
 

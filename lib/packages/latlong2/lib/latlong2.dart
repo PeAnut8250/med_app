@@ -1,3 +1,3 @@
-library latlong2;
+library;
 
-export 'latlong/LatLng.dart';
+export 'latlong/lat_lng.dart';

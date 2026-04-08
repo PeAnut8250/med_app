@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'CarelineMed App',
       debugShowCheckedModeBanner: false, // This removes that red DEBUG banner!
-      home: const OnboardingScreen(),    // This tells Flutter to load your screen first
+      home: const OnboardingScreen(),    // Start with onboarding
     );
   }
 }

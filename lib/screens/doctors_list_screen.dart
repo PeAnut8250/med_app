@@ -3,16 +3,17 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong2.dart';
 
 class DoctorsListScreen extends StatelessWidget {
-  const DoctorsListScreen({super.key});
+  final VoidCallback? onBackTap;
+  const DoctorsListScreen({super.key, this.onBackTap});
 
   static const Color primaryTeal = Color(0xFF26A9B1);
   static const Color backgroundGray = Color(0xFFF8F9FA);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
+    return Material(
+      color: Colors.white,
+      child: Stack(
         children: [
           // 1. Universal Stable Map Layer (Bottom) - CartoDB / OSM
           _buildFlutterMap(),
@@ -24,34 +25,35 @@ class DoctorsListScreen extends StatelessWidget {
           _buildTopOverlay(context),
         ],
       ),
-      bottomNavigationBar: _buildBottomNav(),
     );
   }
 
   Widget _buildFlutterMap() {
     return Positioned.fill(
-      child: FlutterMap(
-        options: const MapOptions(
-          initialCenter: LatLng(-37.8136, 144.9631), // Melbourne
-          initialZoom: 13.5,
-          interactionOptions: InteractionOptions(
-            flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+      child: RepaintBoundary(
+        child: FlutterMap(
+          options: const MapOptions(
+            initialCenter: LatLng(-37.8136, 144.9631), // Melbourne
+            initialZoom: 13.5,
+            interactionOptions: InteractionOptions(
+              flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+            ),
           ),
+          children: [
+            TileLayer(
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              userAgentPackageName: 'com.carelinemed.app',
+            ),
+            MarkerLayer(
+              markers: [
+                _buildMapMarker(const LatLng(-37.8100, 144.9600)),
+                _buildMapMarker(const LatLng(-37.8150, 144.9700)),
+                _buildMapMarker(const LatLng(-37.8200, 144.9550)),
+                _buildMapMarker(const LatLng(-37.8050, 144.9650)),
+              ],
+            ),
+          ],
         ),
-        children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.carelinemed.app',
-          ),
-          MarkerLayer(
-            markers: [
-              _buildMapMarker(const LatLng(-37.8100, 144.9600)),
-              _buildMapMarker(const LatLng(-37.8150, 144.9700)),
-              _buildMapMarker(const LatLng(-37.8200, 144.9550)),
-              _buildMapMarker(const LatLng(-37.8050, 144.9650)),
-            ],
-          ),
-        ],
       ),
     );
   }
@@ -63,7 +65,7 @@ class DoctorsListScreen extends StatelessWidget {
       height: 40,
       child: Container(
         decoration: BoxDecoration(
-          color: primaryTeal.withOpacity(0.2),
+          color: primaryTeal.withValues(alpha: 0.2),
           shape: BoxShape.circle,
         ),
         child: Center(
@@ -95,7 +97,7 @@ class DoctorsListScreen extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.black.withOpacity(0.4),
+              Colors.black.withValues(alpha: 0.4),
               Colors.transparent,
             ],
           ),
@@ -108,7 +110,7 @@ class DoctorsListScreen extends StatelessWidget {
                 _buildCircularButton(
                   icon: Icons.chevron_left,
                   iconColor: Colors.black,
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: onBackTap ?? () => Navigator.pop(context),
                 ),
                 _buildCircularButton(
                   icon: Icons.notifications_none,
@@ -131,7 +133,7 @@ class DoctorsListScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 5),
                   ),
@@ -141,7 +143,7 @@ class DoctorsListScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.search, color: Colors.grey),
                   SizedBox(width: 12),
-                  const Expanded(
+                  Expanded(
                     child: TextField(
                       decoration: InputDecoration(
                         hintText: 'Search for doctors...',
@@ -344,24 +346,6 @@ class DoctorsListScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildBottomNav() {
-    return BottomNavigationBar(
-      currentIndex: 1, // "Doctors" active
-      selectedItemColor: primaryTeal,
-      unselectedItemColor: Colors.grey,
-      showSelectedLabels: true,
-      showUnselectedLabels: true,
-      type: BottomNavigationBarType.fixed,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Doctors'),
-        BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), label: 'Chat'),
-        BottomNavigationBarItem(icon: Icon(Icons.medical_services_outlined), label: 'Lab'),
-        BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-      ],
     );
   }
 }

@@ -1,4 +1,4 @@
-library flutter_map;
+library;
 
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
