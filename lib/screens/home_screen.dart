@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'doctor_profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -59,6 +60,16 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
               doc['specialty']!.toLowerCase().contains(_searchController.text.toLowerCase()))
           .toList();
     });
+  }
+
+  Future<String> _getUserName() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      return prefs.getString('user_name') ?? 'Guest';
+    } catch (e) {
+      debugPrint('Error reading user name: $e');
+      return 'Guest';
+    }
   }
 
   @override
@@ -156,7 +167,20 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           ),
           const SizedBox(height: 24),
           const Text('Hello,', style: TextStyle(color: Colors.white, fontSize: 24)),
-          const Text('Dibakar Sen!', style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
+          FutureBuilder<String>(
+            future: _getUserName(),
+            builder: (context, snapshot) {
+              String name = snapshot.data ?? 'Guest';
+              return Text(
+                '$name!',
+                style: const TextStyle(
+                  color: Colors.white, 
+                  fontSize: 28, 
+                  fontWeight: FontWeight.bold,
+                ),
+              );
+            },
+          ),
           const SizedBox(height: 24),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'booking_flow_screen.dart';
 
 class DoctorProfileView extends StatefulWidget {
   final Map<String, String> doctor;
@@ -408,19 +409,30 @@ class _DoctorProfileViewState extends State<DoctorProfileView> {
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: Container(
-              height: 55,
-              decoration: BoxDecoration(
-                color: primaryTeal,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: const Center(
-                child: Text(
-                  'Book now',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BookingFlowScreen(doctor: widget.doctor),
+                  ),
+                );
+              },
+              borderRadius: BorderRadius.circular(15),
+              child: Container(
+                height: 55,
+                decoration: BoxDecoration(
+                  color: primaryTeal,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: const Center(
+                  child: Text(
+                    'Book now',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

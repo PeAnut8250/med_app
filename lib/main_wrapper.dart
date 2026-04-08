@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 import 'screens/consultation_screen.dart';
 import 'screens/doctors_list_screen.dart';
+import 'screens/messages_screen.dart';
 
 class MainWrapper extends StatefulWidget {
   const MainWrapper({super.key});
@@ -34,7 +35,9 @@ class _MainWrapperState extends State<MainWrapper> {
       DoctorsListScreen(
         onBackTap: () => _animateToTab(0),
       ),
-      const Center(child: Text('Messages Screen Placeholder')),
+      MessagesScreen(
+        onBackTap: () => _animateToTab(0),
+      ),
       const Center(child: Text('Profile Screen Placeholder')),
     ];
   }

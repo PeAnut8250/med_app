@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../main_wrapper.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -226,7 +227,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 40),
         _buildAuthButton(
           text: 'Sign In',
-          onPressed: () {
+          onPressed: () async {
             // BASIC VALIDATION
             if (!_emailController.text.contains('@')) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -241,10 +242,26 @@ class _AuthScreenState extends State<AuthScreen> {
               return;
             }
             
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const MainWrapper()),
-            );
+            // 1. DATA STORAGE (Auto-Login Gate)
+            try {
+              final SharedPreferences prefs = await SharedPreferences.getInstance();
+              
+              // Extract name from email as fallback (e.g. dibakar.sen@gmail.com -> Dibakar)
+              String namePart = _emailController.text.split('@')[0].split('.')[0];
+              String displayName = namePart[0].toUpperCase() + namePart.substring(1).toLowerCase();
+              
+              await prefs.setString('user_name', displayName);
+              await prefs.setInt('login_time', DateTime.now().millisecondsSinceEpoch);
+            } catch (e) {
+              debugPrint('Error saving preferences: $e');
+            }
+
+            if (mounted) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const MainWrapper()),
+              );
+            }
           },
         ),
       ],
@@ -319,7 +336,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 40),
         _buildAuthButton(
           text: 'Sign up',
-          onPressed: () {
+          onPressed: () async {
             // BASIC VALIDATION
             if (_nameController.text.isEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -340,10 +357,21 @@ class _AuthScreenState extends State<AuthScreen> {
               return;
             }
 
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const MainWrapper()),
-            );
+            // 1. DATA STORAGE (Persistence)
+            try {
+              final SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.setString('user_name', _nameController.text.trim());
+              await prefs.setInt('login_time', DateTime.now().millisecondsSinceEpoch);
+            } catch (e) {
+              debugPrint('Error saving preferences: $e');
+            }
+
+            if (mounted) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const MainWrapper()),
+              );
+            }
           },
         ),
       ],
