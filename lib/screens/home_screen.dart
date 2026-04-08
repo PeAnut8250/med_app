@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'doctor_profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -338,11 +339,21 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                 final doc = entry.value;
                 return Padding(
                   padding: EdgeInsets.only(right: entry.key == _filteredDoctors.length - 1 ? 0 : 16.0),
-                  child: DoctorCard(
-                    name: doc['name']!,
-                    specialty: doc['specialty']!,
-                    experience: doc['experience']!,
-                    image: doc['image']!,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DoctorProfileScreen(doctor: doc),
+                        ),
+                      );
+                    },
+                    child: DoctorCard(
+                      name: doc['name']!,
+                      specialty: doc['specialty']!,
+                      experience: doc['experience']!,
+                      image: doc['image']!,
+                    ),
                   ),
                 );
               }).toList(),

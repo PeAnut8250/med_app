@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'doctor_profile_screen.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong2.dart';
 
@@ -274,7 +275,23 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> with AutomaticKee
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
                   itemCount: 3,
                   itemBuilder: (context, index) {
-                    return _buildDoctorListCard();
+                    final mockDoctor = {
+                      'name': 'Dr. Rajesh Verma',
+                      'specialty': 'Orthopedist',
+                      'experience': '6 year experience',
+                      'image': 'assets/image 18.png',
+                    };
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DoctorProfileScreen(doctor: mockDoctor),
+                          ),
+                        );
+                      },
+                      child: _buildDoctorListCard(mockDoctor),
+                    );
                   },
                 ),
               ),
@@ -285,7 +302,7 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> with AutomaticKee
     );
   }
 
-  Widget _buildDoctorListCard() {
+  Widget _buildDoctorListCard(Map<String, String> doctor) {
     return Card(
       margin: const EdgeInsets.only(bottom: 20),
       elevation: 0,
@@ -301,10 +318,10 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> with AutomaticKee
             ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: Image.asset(
-                'assets/image 18.png', 
+                doctor['image']!, 
                 width: 90,
                 height: 90,
-                cacheWidth: 300, // Optimization: Avoid full size decode
+                cacheWidth: 300, 
                 fit: BoxFit.cover,
               ),
             ),
@@ -316,14 +333,14 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> with AutomaticKee
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Dr. Rajesh Verma',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      Text(
+                        doctor['name']!,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Icon(Icons.favorite_border, color: Colors.redAccent.withValues(alpha: 0.8), size: 18),
                     ],
                   ),
-                  const Text('Orthopedist', style: TextStyle(color: Colors.grey, fontSize: 13)),
+                  Text(doctor['specialty']!, style: const TextStyle(color: Colors.grey, fontSize: 13)),
                   const SizedBox(height: 10),
                   const Row(
                     children: [
