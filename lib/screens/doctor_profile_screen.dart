@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class DoctorProfileScreen extends StatefulWidget {
+class DoctorProfileView extends StatefulWidget {
   final Map<String, String> doctor;
 
-  const DoctorProfileScreen({super.key, required this.doctor});
+  const DoctorProfileView({super.key, required this.doctor});
 
   @override
-  State<DoctorProfileScreen> createState() => _DoctorProfileScreenState();
+  State<DoctorProfileView> createState() => _DoctorProfileViewState();
 }
 
-class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
+class _DoctorProfileViewState extends State<DoctorProfileView> {
   int _selectedTabIndex = 0;
   String? _selectedTime;
   bool _isAboutExpanded = false;
@@ -27,74 +27,118 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double headerHeight = screenHeight * 0.45;
+    // Optimization: Fixed height for the header to maintain aspect ratio across screens
+    const double expandedHeaderHeight = 350.0;
 
     return Scaffold(
+      key: const ValueKey('doctor_profile_sanitized_v3'),
       backgroundColor: Colors.white,
-      // Fix 5: Sticky Bottom Bar in the bottomNavigationBar property
       bottomNavigationBar: _buildStickyFooter(),
-      body: SingleChildScrollView(
-        // Fix 1: Main content in SingleChildScrollView
-        child: Column(
-          children: [
-            // Fix 3: Stack restricted to the header only to fix layout occupancy
-            Stack(
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          // 1. Sanitized Header (Real Components + Cropped Asset)
+          _buildSliverAppBar(expandedHeaderHeight),
+
+          // 2. Statistics Row (Actual Native Widgets)
+          SliverToBoxAdapter(
+            child: Column(
               children: [
-                _buildHeaderImage(headerHeight),
-                _buildTopButtons(),
-                _buildImageOverlay(headerHeight),
+                const SizedBox(height: 24),
+                _buildStatsRow(),
+                const SizedBox(height: 32),
+                _buildContentSheet(),
+                const SizedBox(height: 100),
               ],
             ),
-            
-            // Stats row with a small negative margin for overlapping effect
-            Transform.translate(
-              offset: const Offset(0, -30),
-              child: _buildStatsRow(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSliverAppBar(double expandedHeight) {
+    return SliverAppBar(
+      expandedHeight: expandedHeight,
+      pinned: true,
+      elevation: 0,
+      backgroundColor: primaryTeal,
+      // REAL BUTTONS: Replaced baked-in icons with high-fidelity Flutter widgets
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: Center(
+          child: _buildCircularIcon(
+            icon: Icons.chevron_left,
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: Center(
+            child: _buildCircularIcon(
+              icon: Icons.bookmark_border,
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ],
+      flexibleSpace: FlexibleSpaceBar(
+        collapseMode: CollapseMode.parallax,
+        background: Stack(
+          fit: StackFit.expand,
+          children: [
+            // NEW ASSET: Using 'doctor_rajesh.png' as requested
+            Image.asset(
+              'assets/doctor_rajesh.png',
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter,
+              errorBuilder: (context, error, stackTrace) => const Center(
+                child: Icon(Icons.person, size: 100, color: Colors.grey),
+              ),
             ),
             
-            // 3. Content Card (The White Sheet)
-            _buildContentSheet(),
-            
-            const SizedBox(height: 20),
+            // Dynamic Gradient Overlay for depth and text legibility
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.1),
+                    Colors.transparent,
+                    Colors.black.withValues(alpha: 0.3),
+                  ],
+                ),
+              ),
+            ),
+
+            // REAL TEXT OVERLAY: Positioned optimally to replace/cover baked-in labels
+            _buildImageOverlay(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeaderImage(double height) {
-    // Fix 2: Fixed Height Image
-    return Container(
-      width: double.infinity,
-      height: height,
-      color: const Color(0xFFE0E0E0),
-      child: Image.asset(
-        'assets/Doctor Profile.png',
-        fit: BoxFit.cover,
-        alignment: Alignment.topCenter,
-        errorBuilder: (context, error, stackTrace) => const Center(child: Icon(Icons.person, size: 100, color: Colors.grey)),
-      ),
-    );
-  }
-
-  Widget _buildImageOverlay(double height) {
+  Widget _buildImageOverlay() {
     return Positioned(
       left: 24,
-      bottom: 50,
+      bottom: 40,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: primaryTeal.withValues(alpha: 0.2),
+              color: primaryTeal,
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Text(
               'Orthopedic specialist',
               style: TextStyle(
-                color: primaryTeal,
+                color: Colors.white,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
               ),
@@ -102,11 +146,14 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            widget.doctor['name'] ?? 'Dr. Omara',
+            widget.doctor['name'] ?? 'Medical Expert',
             style: const TextStyle(
-              fontSize: 36,
+              fontSize: 34,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: Colors.white,
+              shadows: [
+                Shadow(color: Colors.black38, blurRadius: 6, offset: Offset(0, 2)),
+              ],
             ),
           ),
           const SizedBox(height: 4),
@@ -115,16 +162,16 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               const Text(
                 '₹500',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 22,
                   fontWeight: FontWeight.w900,
-                  color: primaryTeal,
+                  color: Colors.white,
                 ),
               ),
-              Text(
+              const Text(
                 '/session',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey[600],
+                  color: Colors.white70,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -135,42 +182,25 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
     );
   }
 
-  Widget _buildTopButtons() {
-    // Fix 4: Top buttons inside SafeArea
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildCircularIcon(
-              icon: Icons.chevron_left,
-              onPressed: () => Navigator.pop(context),
-            ),
-            _buildCircularIcon(
-              icon: Icons.bookmark_border,
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildCircularIcon({required IconData icon, required VoidCallback onPressed}) {
     return InkWell(
       onTap: onPressed,
+      borderRadius: BorderRadius.circular(50),
       child: Container(
-        width: 45,
-        height: 45,
+        width: 44,
+        height: 44,
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
           ],
         ),
-        child: Icon(icon, color: Colors.black, size: 28),
+        child: Icon(icon, color: Colors.black87, size: 26),
       ),
     );
   }
@@ -192,32 +222,28 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   Widget _buildStatCard(String label, String value, IconData icon) {
     return Container(
       width: (MediaQuery.of(context).size.width - 60) / 3,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
+            blurRadius: 8,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center, // Centered for cleaner stats alignment
         children: [
-          Row(
-            children: [
-              Icon(icon, color: Colors.grey[400], size: 18),
-              const SizedBox(width: 4),
-              Text(
-                label,
-                style: TextStyle(color: Colors.grey[400], fontSize: 11, fontWeight: FontWeight.bold),
-              ),
-            ],
+          Icon(icon, color: primaryTeal.withValues(alpha: 0.6), size: 20),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: TextStyle(color: Colors.grey[400], fontSize: 11, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 4),
           Text(
             value,
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
@@ -233,7 +259,6 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Custom Tab Bar
           Container(
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
@@ -269,9 +294,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               }).toList(),
             ),
           ),
-
           const SizedBox(height: 24),
-          
           const Text('About', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
           GestureDetector(
@@ -293,9 +316,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               ),
             ),
           ),
-
           const SizedBox(height: 32),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -304,24 +325,21 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                 children: [
                   Text(
                     '6 March, Tuesday',
-                    style: TextStyle(color: Colors.grey[800], fontSize: 14, fontWeight: FontWeight.w600),
+                    style: TextStyle(color: Colors.grey[800], fontSize: 13, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(width: 8),
-                  const Icon(Icons.calendar_month_outlined, color: Colors.black87),
+                  const Icon(Icons.calendar_month_outlined, color: Colors.black87, size: 20),
                 ],
               ),
             ],
           ),
-          
           const SizedBox(height: 20),
-          
           Wrap(
             spacing: 12,
             runSpacing: 12,
             children: _timeSlots.map((time) {
               final bool isUnavailable = _unavailableSlots.contains(time);
               final bool isSelected = _selectedTime == time;
-              
               return _buildTimeChip(time, isSelected, isUnavailable);
             }).toList(),
           ),
@@ -334,7 +352,6 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
     Color bgColor = Colors.white;
     Color textColor = primaryTeal;
     Border border = Border.all(color: primaryTeal.withValues(alpha: 0.5));
-
     if (isSelected) {
       bgColor = primaryTeal;
       textColor = Colors.white;
@@ -344,7 +361,6 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
       textColor = Colors.grey[400]!;
       border = Border.all(color: Colors.transparent);
     }
-
     return GestureDetector(
       onTap: isUnavailable ? null : () => setState(() => _selectedTime = time),
       child: Container(

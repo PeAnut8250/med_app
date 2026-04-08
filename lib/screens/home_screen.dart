@@ -344,7 +344,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DoctorProfileScreen(doctor: doc),
+                          builder: (context) => DoctorProfileView(doctor: doc),
                         ),
                       );
                     },

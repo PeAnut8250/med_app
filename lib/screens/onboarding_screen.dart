@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../main_wrapper.dart';
+import 'auth_screen.dart';
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
@@ -106,10 +106,10 @@ class _SliderButtonState extends State<SliderButton> {
               onHorizontalDragEnd: (details) {
                 if (_dragValue > (maxWidth - 150)) {
                   setState(() => _dragValue = maxWidth - 110.0);
-                  // Navigation to Home
+                  // Navigation to Auth
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const MainWrapper()),
+                      MaterialPageRoute(builder: (context) => const AuthScreen()),
                     );
                 } else {
                   setState(() => _dragValue = 0.0);

@@ -286,7 +286,7 @@ class _DoctorsListScreenState extends State<DoctorsListScreen> with AutomaticKee
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DoctorProfileScreen(doctor: mockDoctor),
+                            builder: (context) => DoctorProfileView(doctor: mockDoctor),
                           ),
                         );
                       },
