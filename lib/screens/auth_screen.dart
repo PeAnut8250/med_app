@@ -137,35 +137,24 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget _buildLogo() {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'CARELINE',
-              style: TextStyle(
-                color: Color(0xFFE53935),
-                fontWeight: FontWeight.w900,
-                fontSize: 28,
-                letterSpacing: 1.0,
+        Container(
+          width: 220,
+          height: 70,
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 15,
+                offset: const Offset(0, 8),
               ),
-            ),
-            const Text(
-              'MED',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w900,
-                fontSize: 28,
-                letterSpacing: 1.0,
-              ),
-            ),
-          ],
-        ),
-        const Text(
-          'Happiness is good care',
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
+            ],
+          ),
+          child: Image.asset(
+            'assets/logo.png',
+            fit: BoxFit.contain,
           ),
         ),
       ],

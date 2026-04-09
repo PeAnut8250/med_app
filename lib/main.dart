@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/onboarding_screen.dart';
+import 'screens/splash_screen.dart';
 import 'main_wrapper.dart';
 
 void main() {
@@ -43,13 +44,7 @@ class MyApp extends StatelessWidget {
         future: getInitialScreen(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(
-                  color: Color(0xFF26A9B1),
-                ),
-              ),
-            );
+            return const SplashScreen();
           }
           return snapshot.data ?? const OnboardingScreen();
         },
