@@ -110,7 +110,7 @@ class _AuthScreenState extends State<AuthScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
                 _buildLogo(),
                 const SizedBox(height: 60),
                 _buildAuthToggle(),
@@ -135,29 +135,28 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Widget _buildLogo() {
-    return Column(
-      children: [
-        Container(
-          width: 220,
-          height: 70,
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 15,
-                offset: const Offset(0, 8),
-              ),
-            ],
+    return Container(
+      width: 280,
+      height: 90,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
-          child: Image.asset(
-            'assets/logo.png',
-            fit: BoxFit.contain,
-          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: Image.asset(
+          'assets/logo.jpeg',
+          fit: BoxFit.fitWidth,
+          alignment: Alignment.center,
         ),
-      ],
+      ),
     );
   }
 

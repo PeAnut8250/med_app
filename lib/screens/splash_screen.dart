@@ -13,8 +13,7 @@ class SplashScreen extends StatelessWidget {
           children: [
             // Circular placeholder for the logo
             Container(
-              width: 300,
-              height: 120,
+              width: 320,
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -29,7 +28,7 @@ class SplashScreen extends StatelessWidget {
               ),
               child: Center(
                 child: Image.asset(
-                  'assets/logo.png',
+                  'assets/logo.jpeg',
                   fit: BoxFit.contain,
                 ),
               ),

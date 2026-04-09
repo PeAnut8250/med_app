@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
 
   Widget _buildHeader(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 60, 24, 30),
+      padding: const EdgeInsets.only(top: 60, bottom: 30),
       decoration: const BoxDecoration(
         color: primaryTeal,
         borderRadius: BorderRadius.only(
@@ -123,114 +123,86 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 120,
-                    height: 40,
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 5,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
+          // The Unified Horizontal White Strip
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  height: 40,
+                  alignment: Alignment.centerLeft,
+                  child: Transform.scale(
+                    scale: 1.6,
+                    alignment: Alignment.centerLeft,
                     child: Image.asset(
                       'assets/logo.png',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'Happiness is good care',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: widget.onProfileTap,
-                  borderRadius: BorderRadius.circular(30),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.white, 
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        NotificationBell(
-                          backgroundColor: Colors.transparent,
-                          iconColor: Colors.orange,
-                          hasNotification: true,
-                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
-                        ),
-                        const SizedBox(width: 8),
-                        // Optimization: Caching profile image decode size
-                        CircleAvatar(
-                          radius: 18, 
-                          backgroundImage: ResizeImage(
-                            const AssetImage('assets/Profile.png'),
-                            width: 100, // Pre-scale for circle avatar
-                          ),
-                        ),
-                      ],
+                      fit: BoxFit.fitHeight,
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          const Text('Hello,', style: TextStyle(color: Colors.white, fontSize: 24)),
-          FutureBuilder<String>(
-            future: _getUserName(),
-            builder: (context, snapshot) {
-              String name = snapshot.data ?? 'Guest';
-              return Text(
-                '$name!',
-                style: const TextStyle(
-                  color: Colors.white, 
-                  fontSize: 28, 
-                  fontWeight: FontWeight.bold,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    NotificationBell(
+                      backgroundColor: Colors.transparent,
+                      iconColor: Colors.black87,
+                      hasNotification: true,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen())),
+                    ),
+                    const SizedBox(width: 12),
+                    GestureDetector(
+                      onTap: widget.onProfileTap,
+                      child: CircleAvatar(
+                        radius: 18, 
+                        backgroundImage: ResizeImage(
+                          const AssetImage('assets/Profile.png'),
+                          width: 100, 
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            },
+              ],
+            ),
           ),
           const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
-            child: TextField(
-              controller: _searchController,
-              decoration: const InputDecoration(
-                hintText: 'Search Doctors',
-                hintStyle: TextStyle(color: Colors.grey),
-                icon: Icon(Icons.search, color: Colors.grey),
-                border: InputBorder.none,
-              ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Hello,', style: TextStyle(color: Colors.white, fontSize: 24)),
+                FutureBuilder<String>(
+                  future: _getUserName(),
+                  builder: (context, snapshot) {
+                    String name = snapshot.data ?? 'Guest';
+                    return Text(
+                      '$name!',
+                      style: const TextStyle(
+                        color: Colors.white, 
+                        fontSize: 28, 
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: const InputDecoration(
+                      hintText: 'Search Doctors',
+                      hintStyle: TextStyle(color: Colors.grey),
+                      icon: Icon(Icons.search, color: Colors.grey),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
